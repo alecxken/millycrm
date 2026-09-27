@@ -30,7 +30,8 @@ class LoginForm extends Form
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
+        // Deactivated staff cannot sign in (security); failed attempts are rate limited.
+        if (! Auth::attempt([...$this->only(['email', 'password']), 'is_active' => true], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

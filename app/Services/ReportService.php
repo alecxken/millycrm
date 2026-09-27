@@ -191,7 +191,7 @@ class ReportService
         ],
         'enquiries' => [
             'label' => 'Enquiries',
-            'group_by' => ['month' => 'Month created', 'status' => 'Status', 'channel' => 'Channel', 'destination' => 'Destination', 'trip_type' => 'Trip type', 'consultant' => 'Consultant'],
+            'group_by' => ['month' => 'Month created', 'status' => 'Status', 'channel' => 'Channel', 'destination' => 'Destination', 'trip_type' => 'Trip type', 'lost_reason' => 'Lost reason', 'consultant' => 'Consultant'],
             'filters' => ['status', 'channel', 'trip_type', 'assigned_to'],
         ],
         'bookings' => [
@@ -314,6 +314,21 @@ class ReportService
             'title' => "{$report->name} ({$report->frequency->label()}) — ".fdate(now()),
             'lines' => $lines,
         ];
+    }
+
+    /** Generate, "email" (log mail driver) and stamp a scheduled report. */
+    public function deliver(ScheduledReport $report): string
+    {
+        $text = $this->renderText($this->generate($report));
+
+        foreach ($report->recipients as $recipient) {
+            \Illuminate\Support\Facades\Mail::raw($text, fn ($m) => $m->to($recipient)->subject('[WanderLink CRM] '.$report->name));
+        }
+
+        \Illuminate\Support\Facades\Log::info("Scheduled report generated: {$report->name}", ['recipients' => $report->recipients]);
+        $report->update(['last_run_at' => now(), 'last_output' => $text]);
+
+        return $text;
     }
 
     public function renderText(array $output): string

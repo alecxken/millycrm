@@ -846,9 +846,11 @@ class DemoDataSeeder extends Seeder
         foreach (range(0, 24) as $i) {
             [$category, $priority, $subject, $description] = $scenarios[$i % count($scenarios)];
             $booking = $bookings->random();
-            $daysAgo = $i < 7 ? mt_rand(0, 3) : mt_rand(4, 170);
-            $created = $this->now->copy()->subDays($daysAgo)->subHours(mt_rand(1, 10));
             $open = $i < 9;
+            // Open tickets are recent (some already breaching SLA); resolved ones span six months.
+            $created = $open
+                ? ($i % 2 === 0 ? $this->now->copy()->subHours(mt_rand(1, 20)) : $this->now->copy()->subDays(mt_rand(1, 3))->subHours(mt_rand(1, 10)))
+                : $this->now->copy()->subDays(mt_rand(4, 170))->subHours(mt_rand(1, 10));
             $slaDue = $created->copy()->addHours($priority->slaHours());
 
             // Make the first scenario Grace's live "angry customer" case.
