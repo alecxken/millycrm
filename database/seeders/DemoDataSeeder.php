@@ -91,9 +91,9 @@ class DemoDataSeeder extends Seeder
         [['Lena', 'Felix', 'Hannah'], ['Müller', 'Schmidt', 'Weber'], 'Berlin', 'Germany', 'German', '+4915'],
     ];
 
-    private const COMPANIES = ['Savannah Tech Ltd', 'Rift Valley Breweries', 'Kilima Engineering', 'Mombasa Port Logistics', 'Jua Kali Solar', 'Tausi Pharmaceuticals', 'Baobab Legal LLP', 'Umoja Microfinance', 'Nyati Construction', 'Lakeview Hospital', 'Pwani Fresh Produce', 'Summit Insurance Brokers'];
+    private const COMPANIES = ['Savannah Tech Ltd', 'Rift Valley Breweries', 'Kilima Engineering', 'Mombasa Port Logistics', 'Jua Kali Solar', 'Tausi Pharmaceuticals', 'Baobab Legal LLP', 'Umoja Microfinance', 'Nyati Construction', 'Lakeview Hospital', 'Pwani Fresh Produce', 'Summit Insurance Brokers', 'Maji Water Solutions', 'Twiga Logistics', 'Kasuku Media House', 'Mvule Architects', 'Simba Agritech', 'Zuri Cosmetics', 'Lango Fintech', 'Duma Security Services'];
 
-    private const GROUPS = ['St. Andrew\'s Church Youth', 'Karen Hills School Class of 2026', 'Otieno–Wanjiku Wedding Party', 'Nairobi Rotary Club', 'Strathmore Alumni Hikers', 'Kisumu Women in Business', 'Lenana School Geography Trip', 'Mombasa Golf Society', 'Nakuru SDA Choir', 'Eldoret Runners Club', 'Kenya Nurses Association', 'Thika Road Cyclists'];
+    private const GROUPS = ['St. Andrew\'s Church Youth', 'Karen Hills School Class of 2026', 'Otieno–Wanjiku Wedding Party', 'Nairobi Rotary Club', 'Strathmore Alumni Hikers', 'Kisumu Women in Business', 'Lenana School Geography Trip', 'Mombasa Golf Society', 'Nakuru SDA Choir', 'Eldoret Runners Club', 'Kenya Nurses Association', 'Thika Road Cyclists', 'Kilifi Rotaract Club', 'Upper Hill Toastmasters', 'Riara Parents Association', 'Nyeri Hikers Fellowship'];
 
     /** destination => [style, min pp, max pp, flight?, visa?, region] */
     private const DESTINATIONS = [
@@ -1046,10 +1046,17 @@ class DemoDataSeeder extends Seeder
             $campaign->recipients()->newPivotStatement()->where('campaign_id', $campaign->id)->whereNotNull('opened_at')
                 ->update(['opened_at' => $sentAt->copy()->addHours(5)]);
 
-            // Attribute bookings made by recipients within 60 days of the send.
+            // Attribute bookings made by recipients within 60 days of the send;
+            // make sure each sent campaign has a couple so results are demonstrable.
             $recipientIds = $campaign->recipients()->pluck('customers.id');
             $attributed = Booking::whereIn('customer_id', $recipientIds)->whereNull('campaign_id')
                 ->whereBetween('created_at', [$sentAt, $sentAt->copy()->addDays(60)])->get();
+            if ($attributed->count() < 2) {
+                $attributed = $attributed->merge(Booking::whereIn('customer_id', $recipientIds)->whereNull('campaign_id')
+                    ->whereNotIn('id', $attributed->pluck('id'))->where('status', '!=', BookingStatus::Cancelled)
+                    ->latest('created_at')->limit(2 - $attributed->count())->get());
+                $attributed->each(fn (Booking $b) => $b->created_at->lt($sentAt) && $b->forceFill(['created_at' => $sentAt->copy()->addDays(mt_rand(5, 40))->min($this->now)])->save());
+            }
             $attributed->each->update(['campaign_id' => $campaign->id]);
             $campaign->update(['conversions' => $attributed->count()]);
         }

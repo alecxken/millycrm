@@ -97,7 +97,7 @@ Owners and managers can preview every role's dashboard with the **Executive / Co
 | 5 | My Day | Log in as `consultant@`, go to **My Day** (try it at phone width too) |
 | 6 | Ticket inbox | Log in as `support@`, go to **Tickets** |
 | 7 | Segment builder | Log in as `marketing@`, go to **Segments** and pick a segment |
-| 8 | Campaign results | **Campaigns**, then *Corporate travel desk launch* |
+| 8 | Campaign results | **Campaigns**, then any *Sent* campaign (e.g. *Easter coast escape*) |
 | 9 | Ad-hoc report | **Report builder**, then "Revenue by destination" or "Why we lose deals" |
 | 10 | Framework page | **About the system** |
 
