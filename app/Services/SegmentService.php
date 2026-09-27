@@ -63,7 +63,7 @@ class SegmentService
         if (! empty($rules['min_lifetime_value'])) {
             $query->whereRaw(
                 '(select coalesce(sum(total_amount), 0) from bookings where bookings.customer_id = customers.id and bookings.status != ?) >= ?',
-                [BookingStatus::Cancelled->value, (float) $rules['min_lifetime_value']]
+                [BookingStatus::Cancelled->value, (int) round((float) $rules['min_lifetime_value'])] // int binding: SQLite compares numbers < strings
             );
         }
 

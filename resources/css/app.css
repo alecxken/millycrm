@@ -35,6 +35,14 @@
         -webkit-tap-highlight-color: transparent;
     }
 
+    /* Keep absolutely-positioned screen-reader text inside scroll areas,
+       otherwise it can widen the page on mobile. */
+    .overflow-x-auto,
+    .overflow-y-auto,
+    .overflow-auto {
+        position: relative;
+    }
+
     [x-cloak] {
         display: none !important;
     }

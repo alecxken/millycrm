@@ -22,6 +22,11 @@ class BackupService
         $stamp = now()->format('Ymd-His');
         $connection = DB::connection();
 
+        if ($connection->getDriverName() === 'sqlite' && $connection->transactionLevel() > 0) {
+            // VACUUM cannot run inside a transaction: fall back to a portable SQL dump.
+            return $this->sqliteDump($this->directory()."/wanderlink-{$stamp}.sql");
+        }
+
         if ($connection->getDriverName() === 'sqlite') {
             $target = $this->directory()."/wanderlink-{$stamp}.sqlite";
             // VACUUM INTO produces a consistent copy even while the app is running.
@@ -43,6 +48,26 @@ class BackupService
         }
 
         throw new RuntimeException('Backups are supported for SQLite and MySQL only.');
+    }
+
+    private function sqliteDump(string $target): string
+    {
+        $pdo = DB::connection()->getPdo();
+        $out = fopen($target, 'w');
+        fwrite($out, "-- WanderLink CRM backup ".now()->toIso8601String()."\nPRAGMA foreign_keys=OFF;\nBEGIN TRANSACTION;\n");
+
+        foreach (DB::select("select name, sql from sqlite_master where type = 'table' and name not like 'sqlite_%'") as $table) {
+            fwrite($out, $table->sql.";\n");
+            foreach (DB::table($table->name)->get() as $row) {
+                $values = array_map(fn ($v) => $v === null ? 'NULL' : $pdo->quote((string) $v), (array) $row);
+                fwrite($out, 'INSERT INTO "'.$table->name.'" VALUES ('.implode(',', $values).");\n");
+            }
+        }
+
+        fwrite($out, "COMMIT;\n");
+        fclose($out);
+
+        return $target;
     }
 
     /** @return Collection<int, array{name:string, size:int, created_at:\Illuminate\Support\Carbon}> */

@@ -62,7 +62,7 @@ new #[Title('Bookings')] class extends Component
     </div>
 
     <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div class="inline-flex overflow-x-auto rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist">
+        <div class="inline-flex max-w-full overflow-x-auto rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist">
             @foreach (['upcoming' => 'Upcoming', 'past' => 'Completed', 'cancelled' => 'Cancelled', 'all' => 'All'] as $key => $label)
                 <button type="button" role="tab" wire:click="$set('when', '{{ $key }}')" aria-selected="{{ $when === $key ? 'true' : 'false' }}" @class(['shrink-0 rounded-lg px-3 py-1.5 font-medium', 'bg-white shadow-sm dark:bg-slate-950' => $when === $key, 'text-slate-600 dark:text-slate-400' => $when !== $key])>{{ $label }}</button>
             @endforeach

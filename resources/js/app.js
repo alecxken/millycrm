@@ -17,6 +17,11 @@ function applyTheme(theme) {
 }
 
 media.addEventListener('change', () => applyTheme(localStorage.getItem('theme') || 'system'));
+// wire:navigate swaps <html> attributes; restore the theme class at swap time,
+// before Alpine initialises the new page (avoids a flash and chart re-renders).
+document.addEventListener('livewire:navigating', (e) => {
+    e.detail.onSwap(() => applyTheme(localStorage.getItem('theme') || 'system'));
+});
 document.addEventListener('livewire:navigated', () => applyTheme(localStorage.getItem('theme') || 'system'));
 
 document.addEventListener('alpine:init', () => {
@@ -58,7 +63,8 @@ document.addEventListener('alpine:init', () => {
         chart: null,
         init() {
             this.render();
-            this._onTheme = () => this.render();
+            // Re-render only when the theme really flips (not on every navigation).
+            this._onTheme = (e) => { if (e.detail.dark !== this._dark) this.render(); };
             window.addEventListener('theme-changed', this._onTheme);
         },
         destroy() {
@@ -66,10 +72,12 @@ document.addEventListener('alpine:init', () => {
             this.chart?.destroy();
         },
         render() {
+            this.chart?.stop();
             this.chart?.destroy();
             this.chart = null;
             if (!this.$refs.canvas?.isConnected) return;
             const dark = document.documentElement.classList.contains('dark');
+            this._dark = dark;
             const grid = dark ? 'rgba(148,163,184,0.15)' : 'rgba(100,116,139,0.15)';
             const text = dark ? '#cbd5e1' : '#475569';
             Chart.defaults.font.family = 'Inter, ui-sans-serif, system-ui';

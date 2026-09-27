@@ -61,7 +61,7 @@ new #[Title('Feedback')] class extends Component
 
     <div class="mb-4 inline-flex rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist">
         @foreach (['' => 'All', 'promoter' => 'Promoters', 'passive' => 'Passives', 'detractor' => 'Detractors'] as $key => $label)
-            <button type="button" role="tab" wire:click="$set('group', '{{ $key }}')" aria-selected="{{ $group === $key ? 'true' : 'false' }}" @class(['rounded-lg px-3 py-1.5 font-medium', 'bg-white shadow-sm dark:bg-slate-950' => $group === $key, 'text-slate-600 dark:text-slate-400' => $group !== $key])>{{ $label }}</button>
+            <button type="button" role="tab" wire:click="$set('group', '{{ $key }}')" aria-selected="{{ $group === $key ? 'true' : 'false' }}" @class(['shrink-0 rounded-lg px-3 py-1.5 font-medium', 'bg-white shadow-sm dark:bg-slate-950' => $group === $key, 'text-slate-600 dark:text-slate-400' => $group !== $key])>{{ $label }}</button>
         @endforeach
     </div>
 

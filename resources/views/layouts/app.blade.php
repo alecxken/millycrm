@@ -59,7 +59,7 @@
             </button>
 
             <button type="button" x-data x-on:click="$dispatch('open-command-palette')"
-                    class="flex h-10 flex-1 items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 text-left text-sm text-slate-500 transition hover:border-slate-300 hover:bg-white sm:max-w-md dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400 dark:hover:bg-slate-800">
+                    class="flex h-10 min-w-0 flex-1 items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 text-left text-sm text-slate-500 transition hover:border-slate-300 hover:bg-white sm:max-w-md dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400 dark:hover:bg-slate-800">
                 <x-hicon name="magnifying-glass" class="size-5" />
                 <span class="flex-1 truncate">Search customers, bookings, phone…</span>
                 <kbd class="hidden rounded-md border border-slate-300 bg-white px-1.5 py-0.5 font-sans text-[11px] font-semibold text-slate-500 sm:inline dark:border-slate-600 dark:bg-slate-900 dark:text-slate-400">⌘K</kbd>
@@ -70,7 +70,7 @@
                     <div class="hidden sm:block"><x-button :href="route('pipeline', ['new' => 1])" wire:navigate icon="plus">New enquiry</x-button></div>
                 @endcan
 
-                <button type="button" x-data x-on:click="$store.theme.cycle()" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+                <button type="button" x-data x-on:click="$store.theme.cycle()" class="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
                         x-bind:title="'Theme: ' + $store.theme.value">
                     <span class="sr-only" x-text="'Theme: ' + $store.theme.value + '. Click to change.'"></span>
                     <span x-show="$store.theme.value === 'light'"><x-hicon name="sun" /></span>

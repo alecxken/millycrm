@@ -34,7 +34,7 @@ new class extends Component
 
     public ?string $panel = null;
 
-    public array $call = [];
+    public array $log = [];
 
     public array $email = [];
 
@@ -69,7 +69,7 @@ new class extends Component
     public function resetForms(): void
     {
         $c = $this->customer->loadMissing(['preference', 'tags:id']);
-        $this->call = ['type' => 'call', 'direction' => 'outbound', 'subject' => '', 'body' => '', 'follow_up' => false, 'follow_up_at' => now()->addDays(2)->format('Y-m-d')];
+        $this->log = ['type' => 'call', 'direction' => 'outbound', 'subject' => '', 'body' => '', 'follow_up' => false, 'follow_up_at' => now()->addDays(2)->format('Y-m-d')];
         $this->email = ['subject' => 'Hello from WanderLink Travel', 'body' => "Hi {$c->first_name},\n\n"];
         $this->task = ['title' => '', 'due_at' => now()->addDay()->format('Y-m-d\T10:00'), 'priority' => 'normal'];
         $this->enquiry = ['destination' => $c->preference?->preferred_destinations[0] ?? '', 'departure_date' => now()->addMonth()->format('Y-m-d'), 'return_date' => now()->addMonth()->addDays(5)->format('Y-m-d'), 'travellers_adults' => 2, 'travellers_children' => 0, 'budget' => '', 'trip_type' => $c->preference?->travel_style?->value ?? '', 'channel' => $c->source->value];
@@ -108,13 +108,13 @@ new class extends Component
     {
         $this->authorize('update', $this->customer);
         $data = $this->validate([
-            'call.type' => ['required', Rule::enum(InteractionType::class)],
-            'call.direction' => ['required', Rule::enum(Direction::class)],
-            'call.subject' => ['required', 'string', 'max:150'],
-            'call.body' => ['nullable', 'string', 'max:5000'],
-            'call.follow_up' => ['boolean'],
-            'call.follow_up_at' => ['required_if:call.follow_up,true', 'nullable', 'date', 'after_or_equal:today'],
-        ], attributes: ['call.subject' => 'summary', 'call.follow_up_at' => 'follow-up date'])['call'];
+            'log.type' => ['required', Rule::enum(InteractionType::class)],
+            'log.direction' => ['required', Rule::enum(Direction::class)],
+            'log.subject' => ['required', 'string', 'max:150'],
+            'log.body' => ['nullable', 'string', 'max:5000'],
+            'log.follow_up' => ['boolean'],
+            'log.follow_up_at' => ['required_if:log.follow_up,true', 'nullable', 'date', 'after_or_equal:today'],
+        ], attributes: ['log.subject' => 'summary', 'log.follow_up_at' => 'follow-up date'])['log'];
 
         $this->customer->interactions()->create([
             'user_id' => auth()->id(),
@@ -636,21 +636,21 @@ new class extends Component
         <form wire:submit="logInteraction" id="log-form" class="space-y-4">
             <div class="grid grid-cols-3 gap-2">
                 @foreach (InteractionType::cases() as $type)
-                    <label @class(['flex cursor-pointer flex-col items-center gap-1 rounded-xl border p-2 text-xs font-medium', 'border-brand-600 bg-brand-50 text-brand-800 dark:bg-brand-400/10 dark:text-brand-200' => $call['type'] === $type->value, 'border-slate-200 dark:border-slate-700' => $call['type'] !== $type->value])>
-                        <input type="radio" wire:model.live="call.type" value="{{ $type->value }}" class="sr-only"><x-hicon :name="$type->icon()" />{{ $type->label() }}
+                    <label @class(['flex cursor-pointer flex-col items-center gap-1 rounded-xl border p-2 text-xs font-medium', 'border-brand-600 bg-brand-50 text-brand-800 dark:bg-brand-400/10 dark:text-brand-200' => $log['type'] === $type->value, 'border-slate-200 dark:border-slate-700' => $log['type'] !== $type->value])>
+                        <input type="radio" wire:model.live="log.type" value="{{ $type->value }}" class="sr-only"><x-hicon :name="$type->icon()" />{{ $type->label() }}
                     </label>
                 @endforeach
             </div>
             <x-field label="Direction">
                 <div class="flex gap-4 text-sm">
-                    @foreach (Direction::cases() as $d)<label class="flex items-center gap-2"><input type="radio" wire:model="call.direction" value="{{ $d->value }}" class="text-brand-700 focus:ring-brand-600">{{ $d->label() }}</label>@endforeach
+                    @foreach (Direction::cases() as $d)<label class="flex items-center gap-2"><input type="radio" wire:model="log.direction" value="{{ $d->value }}" class="text-brand-700 focus:ring-brand-600">{{ $d->label() }}</label>@endforeach
                 </div>
             </x-field>
-            <x-field label="Summary" for="call-subject" error="call.subject" required><input id="call-subject" wire:model.blur="call.subject" class="form-input" placeholder="e.g. Discussed Zanzibar dates"></x-field>
-            <x-field label="Notes" for="call-body"><textarea id="call-body" wire:model="call.body" rows="5" class="form-input" placeholder="What was agreed? What does the customer need next?"></textarea></x-field>
-            <label class="flex items-center gap-2 text-sm"><input type="checkbox" wire:model.live="call.follow_up" class="rounded border-slate-300 text-brand-700 focus:ring-brand-600"> Schedule a follow-up</label>
-            @if ($call['follow_up'])
-                <x-field label="Follow up on" for="call-fu" error="call.follow_up_at"><input id="call-fu" type="date" wire:model="call.follow_up_at" class="form-input"></x-field>
+            <x-field label="Summary" for="call-subject" error="log.subject" required><input id="call-subject" wire:model.blur="log.subject" class="form-input" placeholder="e.g. Discussed Zanzibar dates"></x-field>
+            <x-field label="Notes" for="call-body"><textarea id="call-body" wire:model="log.body" rows="5" class="form-input" placeholder="What was agreed? What does the customer need next?"></textarea></x-field>
+            <label class="flex items-center gap-2 text-sm"><input type="checkbox" wire:model.live="log.follow_up" class="rounded border-slate-300 text-brand-700 focus:ring-brand-600"> Schedule a follow-up</label>
+            @if ($log['follow_up'])
+                <x-field label="Follow up on" for="call-fu" error="log.follow_up_at"><input id="call-fu" type="date" wire:model="log.follow_up_at" class="form-input"></x-field>
             @endif
         </form>
         <x-slot:footer><x-button variant="secondary" wire:click="$set('panel', null)">Cancel</x-button><x-button type="submit" form="log-form" loading="logInteraction">Save to timeline</x-button></x-slot:footer>

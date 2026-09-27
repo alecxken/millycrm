@@ -248,7 +248,7 @@ new #[Title('Pipeline')] class extends Component
 <div>
     <x-page-header title="Sales pipeline" subtitle="Drag enquiries between stages. Cards turn amber when a customer has gone quiet.">
         <x-slot:actions>
-            <div class="inline-flex rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist" aria-label="Layout">
+            <div class="inline-flex max-w-full overflow-x-auto rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist" aria-label="Layout">
                 @foreach (['board' => ['Board', 'view-columns'], 'list' => ['List', 'list-bullet']] as $key => [$label, $icon])
                     <button type="button" role="tab" wire:click="$set('view', '{{ $key }}')" aria-selected="{{ $view === $key ? 'true' : 'false' }}"
                             @class(['inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium', 'bg-white shadow-sm dark:bg-slate-950' => $view === $key, 'text-slate-600 dark:text-slate-400' => $view !== $key])>

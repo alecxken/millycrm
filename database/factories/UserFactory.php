@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use App\Enums\Role;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;

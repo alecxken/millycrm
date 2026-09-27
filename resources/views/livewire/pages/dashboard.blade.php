@@ -136,10 +136,10 @@ new #[Title('Dashboard')] class extends Component
                    :subtitle="now()->format('l, j F Y').' · live, refreshes every 30 seconds'">
         <x-slot:actions>
             @if (auth()->user()->isManagerOrAbove())
-                <div class="inline-flex rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist" aria-label="Dashboard view">
+                <div class="inline-flex max-w-full overflow-x-auto rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist" aria-label="Dashboard view">
                     @foreach (['executive' => 'Executive', 'consultant' => 'Consultant', 'marketing' => 'Marketing', 'support' => 'Support'] as $key => $label)
                         <button type="button" role="tab" wire:click="$set('view', '{{ $key }}')" aria-selected="{{ $view === $key ? 'true' : 'false' }}"
-                                @class(['rounded-lg px-3 py-1.5 font-medium transition', 'bg-white text-slate-900 shadow-sm dark:bg-slate-950 dark:text-white' => $view === $key, 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white' => $view !== $key])>{{ $label }}</button>
+                                @class(['shrink-0 rounded-lg px-3 py-1.5 font-medium transition', 'bg-white text-slate-900 shadow-sm dark:bg-slate-950 dark:text-white' => $view === $key, 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white' => $view !== $key])>{{ $label }}</button>
                     @endforeach
                 </div>
             @endif
