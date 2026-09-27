@@ -51,8 +51,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * Realistic, deterministic demo data for WanderLink Travel.
- * Same seed => same data, so screenshots are reproducible.
+ * Realistic demo data for WanderLink Travel, generated from a fixed random
+ * seed and relative to today's date so dashboards always look current.
  */
 class DemoDataSeeder extends Seeder
 {

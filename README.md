@@ -149,7 +149,7 @@ This is a teaching prototype, not legal advice. A production deployment would ad
 - `app/Services`: business logic (`LifecycleService`, `QuoteService`, `PipelineService`, `SegmentService`, `CampaignService`, `ReportService`, `TaskAutomationService`, `TicketService`, `PrivacyService`, `BackupService`, `BookingService`, `CustomerService`)
 - `app/Policies`: a policy per main model, with row-level rules
 - `resources/views/livewire/pages`: Volt page components, kept thin
-- `database/seeders/DemoDataSeeder.php`: deterministic, realistic data (150 customers, 222 enquiries, ~100 bookings, 500+ interactions, 25 tickets, 60 feedback entries, 20 suppliers, 5 campaigns)
+- `database/seeders/DemoDataSeeder.php`: realistic data from a fixed random seed, generated relative to today so dashboards always look current (150 customers, 222 enquiries, ~90–110 bookings, 500+ interactions, 25 tickets, 60 feedback entries, 20 suppliers, 5 campaigns)
 - `tests/Feature`: Pest tests for lifecycle promotion, quote-to-booking conversion, campaign consent, role access, segment rules, the scheduled report command, privacy and backup, UI flows, and a smoke test of every screen for every role
 - `Model::preventLazyLoading()` is on outside production, so N+1 queries fail loudly in development and tests
 
