@@ -487,8 +487,8 @@ class DemoDataSeeder extends Seeder
     private function statusForAge(int $daysAgo): EnquiryStatus
     {
         $weights = match (true) {
-            $daysAgo > 90 => ['won' => 36, 'lost' => 58, 'negotiating' => 3, 'quoted' => 3],
-            $daysAgo > 35 => ['won' => 36, 'lost' => 34, 'negotiating' => 12, 'quoted' => 12, 'contacted' => 6],
+            $daysAgo > 90 => ['won' => 38, 'lost' => 62],
+            $daysAgo > 35 => ['won' => 40, 'lost' => 36, 'negotiating' => 14, 'quoted' => 10],
             $daysAgo > 10 => ['won' => 22, 'lost' => 10, 'negotiating' => 22, 'quoted' => 24, 'contacted' => 16, 'new' => 6],
             default => ['new' => 36, 'contacted' => 34, 'quoted' => 22, 'negotiating' => 8],
         };

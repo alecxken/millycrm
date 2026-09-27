@@ -67,7 +67,7 @@
 
             <div class="ml-auto flex items-center gap-1 sm:gap-2">
                 @can('pipeline.manage')
-                    <x-button :href="route('pipeline', ['new' => 1])" wire:navigate icon="plus" size="md" class="hidden sm:inline-flex">New enquiry</x-button>
+                    <div class="hidden sm:block"><x-button :href="route('pipeline', ['new' => 1])" wire:navigate icon="plus">New enquiry</x-button></div>
                 @endcan
 
                 <button type="button" x-data x-on:click="$store.theme.cycle()" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
