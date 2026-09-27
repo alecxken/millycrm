@@ -43,6 +43,7 @@ use App\Services\LifecycleService;
 use App\Services\QuoteService;
 use App\Services\TaskAutomationService;
 use Faker\Generator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -126,6 +127,9 @@ class DemoDataSeeder extends Seeder
         mt_srand(2026);
 
         activity()->disableLogging();
+        // The seeder is a one-off script; N+1 protection is for the app itself.
+        $preventLazy = Model::preventsLazyLoading();
+        Model::preventLazyLoading(false);
 
         $this->seedUsers();
         $this->seedTags();
@@ -143,6 +147,7 @@ class DemoDataSeeder extends Seeder
         activity()->enableLogging();
         $this->seedAuditTrail();
         Auth::logout();
+        Model::preventLazyLoading($preventLazy);
     }
 
     /* ------------------------------------------------------------------ */

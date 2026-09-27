@@ -6,6 +6,7 @@ use App\Enums\BookingStatus;
 use App\Enums\Currency;
 use App\Enums\PaymentStatus;
 use App\Models\Concerns\HasReference;
+use App\Services\LifecycleService;
 use App\Models\Concerns\VisibleToUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,16 @@ class Booking extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnly(['status', 'payment_status', 'amount_paid', 'total_amount', 'start_date', 'end_date'])->logOnlyDirty();
+    }
+
+    protected static function booted(): void
+    {
+        // Lifecycle promotion (lead -> customer -> repeat -> VIP) follows every booking change.
+        static::saved(function (Booking $booking) {
+            if ($booking->wasRecentlyCreated || $booking->wasChanged(['status', 'total_amount'])) {
+                app(LifecycleService::class)->evaluate(Customer::findOrFail($booking->customer_id));
+            }
+        });
     }
 
     public function ownerColumn(): string

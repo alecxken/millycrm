@@ -9,9 +9,6 @@ new #[Layout('layouts.guest')] class extends Component
 {
     public LoginForm $form;
 
-    /**
-     * Handle an incoming authentication request.
-     */
     public function login(): void
     {
         $this->validate();
@@ -22,50 +19,62 @@ new #[Layout('layouts.guest')] class extends Component
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
+
+    /** Demo convenience: fill the form with a seeded account. */
+    public function useDemo(string $email): void
+    {
+        $this->form->email = $email;
+        $this->form->password = 'password';
+    }
 }; ?>
 
 <div>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <h1 class="text-2xl font-bold tracking-tight">Sign in</h1>
+    <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Welcome back. Pick up where you left off.</p>
 
-    <form wire:submit="login">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
-        </div>
+    <x-auth-session-status class="mt-4" :status="session('status')" />
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    <form wire:submit="login" class="mt-8 space-y-5">
+        <x-field label="Email" for="email" error="form.email">
+            <input wire:model="form.email" id="email" type="email" name="email" required autofocus autocomplete="username" class="form-input" placeholder="you@wanderlink.test">
+        </x-field>
 
-            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+        <x-field label="Password" for="password" error="form.password">
+            <input wire:model="form.password" id="password" type="password" name="password" required autocomplete="current-password" class="form-input">
+        </x-field>
 
-            <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember" class="inline-flex items-center">
-                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+        <div class="flex items-center justify-between">
+            <label for="remember" class="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded border-slate-300 text-brand-700 focus:ring-brand-600 dark:border-slate-700 dark:bg-slate-900">
+                Remember me
             </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </a>
+                <a class="link text-sm" href="{{ route('password.request') }}" wire:navigate>Forgot password?</a>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
         </div>
+
+        <x-button type="submit" size="lg" class="w-full" loading="login">Sign in</x-button>
     </form>
+
+    <div class="mt-10">
+        <div class="flex items-center gap-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+            <span class="h-px flex-1 bg-slate-200 dark:bg-slate-800"></span>Demo accounts<span class="h-px flex-1 bg-slate-200 dark:bg-slate-800"></span>
+        </div>
+        <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            @foreach ([
+                ['owner@wanderlink.test', 'David', 'Owner', 'amber', 'key'],
+                ['manager@wanderlink.test', 'Faith', 'Manager', 'violet', 'briefcase'],
+                ['consultant@wanderlink.test', 'Achieng', 'Consultant', 'teal', 'user'],
+                ['marketing@wanderlink.test', 'Zawadi', 'Marketing', 'rose', 'megaphone'],
+                ['support@wanderlink.test', 'Grace', 'Support', 'sky', 'lifebuoy'],
+            ] as [$email, $name, $role, $color, $icon])
+                <button type="button" wire:click="useDemo('{{ $email }}')"
+                        class="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-2 text-left transition hover:border-brand-400 hover:bg-brand-50 dark:border-slate-800 dark:hover:border-brand-700 dark:hover:bg-brand-400/5">
+                    <x-badge :color="$color" :icon="$icon" :label="$role" size="xs" />
+                    <span class="text-sm font-medium">{{ $name }}</span>
+                </button>
+            @endforeach
+        </div>
+        <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">All demo passwords are <code class="rounded bg-slate-100 px-1 dark:bg-slate-800">password</code>.</p>
+    </div>
 </div>

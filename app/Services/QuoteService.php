@@ -23,7 +23,6 @@ class QuoteService
     public const FOLLOW_UP_AFTER_DAYS = 2;
 
     public function __construct(
-        private readonly LifecycleService $lifecycle,
         private readonly PipelineService $pipeline,
     ) {}
 
@@ -168,8 +167,6 @@ class QuoteService
                 'related_type' => Booking::class,
                 'related_id' => $booking->id,
             ]);
-
-            $this->lifecycle->evaluate($customer->refresh());
 
             return $booking;
         });

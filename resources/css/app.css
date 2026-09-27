@@ -1,3 +1,96 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../../app/**/*.php';
+
+/* Class-based dark mode, toggled by the theme switcher (defaults to system). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+
+    /* Brand: deep teal primary (#0F766E) and warm sand accent (#F59E0B). */
+    --color-brand-50: #f0fdfa;
+    --color-brand-100: #ccfbf1;
+    --color-brand-200: #99f6e4;
+    --color-brand-300: #5eead4;
+    --color-brand-400: #2dd4bf;
+    --color-brand-500: #14b8a6;
+    --color-brand-600: #0d9488;
+    --color-brand-700: #0f766e;
+    --color-brand-800: #115e59;
+    --color-brand-900: #134e4a;
+    --color-brand-950: #042f2e;
+    --color-sand-400: #fbbf24;
+    --color-sand-500: #f59e0b;
+    --color-sand-600: #d97706;
+}
+
+@layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    /* Visible focus rings everywhere (WCAG 2.4.7). */
+    :focus-visible {
+        outline: 2px solid var(--color-brand-600);
+        outline-offset: 2px;
+    }
+
+    .dark :focus-visible {
+        outline-color: var(--color-brand-400);
+    }
+}
+
+@layer components {
+    .card {
+        @apply rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900;
+    }
+
+    .form-input {
+        @apply block w-full rounded-lg border-slate-300 bg-white text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-brand-600 focus:ring-brand-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500;
+    }
+
+    .form-label {
+        @apply mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300;
+    }
+
+    .table-base {
+        @apply min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800;
+    }
+
+    .table-base th {
+        @apply px-4 py-3 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase dark:text-slate-400;
+    }
+
+    .table-base td {
+        @apply px-4 py-3 text-slate-700 dark:text-slate-300;
+    }
+
+    .link {
+        @apply font-medium text-brand-700 underline-offset-2 hover:underline dark:text-brand-400;
+    }
+}
+
+/* Kanban drag feedback */
+.sortable-ghost {
+    opacity: 0.4;
+}
+
+.sortable-chosen {
+    @apply ring-2 ring-brand-500;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
