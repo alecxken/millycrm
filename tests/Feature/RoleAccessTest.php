@@ -79,3 +79,15 @@ it('stores passport numbers encrypted at rest', function () {
     expect($raw)->not->toContain('A1234567')
         ->and($customer->fresh()->passport_number)->toBe('A1234567');
 });
+
+it('seeds the named admin accounts with full rights, idempotently', function () {
+    $this->seed(\Database\Seeders\AdminAccountsSeeder::class);
+    $this->seed(\Database\Seeders\AdminAccountsSeeder::class);
+
+    foreach (['mildredkendagor@gmail.com', 'alecxkendagor@gmail.com'] as $email) {
+        $user = User::where('email', $email)->sole();
+        expect($user->hasRole(Role::Owner->value))->toBeTrue()
+            ->and($user->can('admin.backup'))->toBeTrue()
+            ->and($user->can('settings.manage'))->toBeTrue();
+    }
+});
