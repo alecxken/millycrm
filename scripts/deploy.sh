@@ -32,6 +32,9 @@ if [ ! -f .env ]; then
     cp .env.example .env
     sed -i 's/^APP_ENV=.*/APP_ENV=production/; s/^APP_DEBUG=.*/APP_DEBUG=false/' .env
     php artisan key:generate --force
+elif ! grep -qE '^APP_KEY=.+' .env; then
+    echo "==> .env has no APP_KEY: generating one"
+    php artisan key:generate --force
 fi
 
 touch database/database.sqlite
