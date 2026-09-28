@@ -41,6 +41,7 @@ class Navigation
                 ['label' => 'Staff & roles', 'route' => 'admin.users', 'active' => 'admin.users', 'icon' => 'user-group', 'can' => 'admin.users'],
                 ['label' => 'Audit trail', 'route' => 'admin.audit', 'active' => 'admin.audit', 'icon' => 'finger-print', 'can' => 'admin.audit'],
                 ['label' => 'Backups', 'route' => 'admin.backups', 'active' => 'admin.backups', 'icon' => 'circle-stack', 'can' => 'admin.backup'],
+                ['label' => 'Appearance', 'route' => 'admin.appearance', 'active' => 'admin.appearance', 'icon' => 'swatch', 'can' => 'settings.manage'],
                 ['label' => 'About the system', 'route' => 'about-system', 'active' => 'about-system', 'icon' => 'map', 'can' => null],
             ],
         ];

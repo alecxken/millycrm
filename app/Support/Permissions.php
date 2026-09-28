@@ -31,6 +31,7 @@ final class Permissions
         'admin.audit' => 'View the audit trail',
         'admin.users' => 'Manage staff accounts',
         'admin.backup' => 'Run and download backups',
+        'settings.manage' => 'Change the agency theme (Appearance)',
     ];
 
     /** @return array<string, array<int, string>> */

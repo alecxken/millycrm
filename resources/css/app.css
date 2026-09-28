@@ -1,3 +1,21 @@
+/* Self-hosted fonts: no CDN, works on locked-down networks and under a strict CSP. */
+@import '@fontsource/quicksand/300.css';
+@import '@fontsource/quicksand/400.css';
+@import '@fontsource/quicksand/500.css';
+@import '@fontsource/quicksand/600.css';
+@import '@fontsource/quicksand/700.css';
+@import '@fontsource/nunito/300.css';
+@import '@fontsource/nunito/400.css';
+@import '@fontsource/nunito/600.css';
+@import '@fontsource/nunito/700.css';
+@import '@fontsource/plus-jakarta-sans/300.css';
+@import '@fontsource/plus-jakarta-sans/400.css';
+@import '@fontsource/plus-jakarta-sans/600.css';
+@import '@fontsource/plus-jakarta-sans/700.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 
@@ -10,29 +28,99 @@
 /* Class-based dark mode, toggled by the theme switcher (defaults to system). */
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+/*
+ * Runtime theme. ThemeService prints these on :root from Settings → Appearance;
+ * the values here are only the fallback. Every brand/accent shade is derived
+ * from --brand and --accent, so one colour picker re-themes the whole app.
+ */
+:root {
+    --brand: #0f766e;
+    --brand-ink: #ffffff;
+    --accent: #f59e0b;
+    --accent-ink: #1f2937;
+    --app-font: 'Quicksand', ui-sans-serif, system-ui, sans-serif;
+    --radius-scale: 1;
+    --wash-opacity: 1;
 
-    /* Brand: deep teal primary (#0F766E) and warm sand accent (#F59E0B). */
-    --color-brand-50: #f0fdfa;
-    --color-brand-100: #ccfbf1;
-    --color-brand-200: #99f6e4;
-    --color-brand-300: #5eead4;
-    --color-brand-400: #2dd4bf;
-    --color-brand-500: #14b8a6;
-    --color-brand-600: #0d9488;
-    --color-brand-700: #0f766e;
-    --color-brand-800: #115e59;
-    --color-brand-900: #134e4a;
-    --color-brand-950: #042f2e;
-    --color-sand-400: #fbbf24;
-    --color-sand-500: #f59e0b;
-    --color-sand-600: #d97706;
+    /* Shadows are tinted with the brand, never neutral black. */
+    --shadow-panel: 0 2px 10px color-mix(in srgb, var(--color-brand-950) 5%, transparent), 0 12px 28px -18px color-mix(in srgb, var(--color-brand-950) 24%, transparent);
+    --shadow-rail: 0 2px 10px color-mix(in srgb, var(--color-brand-950) 5%, transparent), 0 18px 40px -26px color-mix(in srgb, var(--color-brand-950) 38%, transparent);
+    --shadow-lift: 0 16px 48px color-mix(in srgb, var(--color-brand-950) 16%, transparent), 0 4px 12px rgba(0, 0, 0, 0.06);
+    --hairline: color-mix(in srgb, var(--color-brand-800) 9%, transparent);
+    --hover-wash: color-mix(in srgb, var(--brand) 7%, white);
+}
+
+.dark {
+    --hairline: rgba(148, 170, 180, 0.12);
+    --hover-wash: color-mix(in srgb, var(--brand) 14%, #111a1f);
+    --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 12px 28px -18px rgba(0, 0, 0, 0.7);
+    --shadow-rail: 0 18px 40px -26px rgba(0, 0, 0, 0.8);
+}
+
+@theme {
+    --font-sans: var(--app-font);
+
+    --color-brand-50: color-mix(in oklab, var(--brand) 7%, white);
+    --color-brand-100: color-mix(in oklab, var(--brand) 15%, white);
+    --color-brand-200: color-mix(in oklab, var(--brand) 30%, white);
+    --color-brand-300: color-mix(in oklab, var(--brand) 48%, white);
+    --color-brand-400: color-mix(in oklab, var(--brand) 66%, white);
+    --color-brand-500: color-mix(in oklab, var(--brand) 82%, white);
+    --color-brand-600: color-mix(in oklab, var(--brand) 92%, white);
+    --color-brand-700: var(--brand);
+    --color-brand-800: color-mix(in oklab, var(--brand) 82%, black);
+    --color-brand-900: color-mix(in oklab, var(--brand) 64%, black);
+    --color-brand-950: color-mix(in oklab, var(--brand) 42%, black);
+    --color-sand-400: color-mix(in oklab, var(--accent) 78%, white);
+    --color-sand-500: var(--accent);
+    --color-sand-600: color-mix(in oklab, var(--accent) 84%, black);
+
+    /* Cool, blue-leaning greys: the chrome is white, grey-blue and near-black. */
+    --color-slate-50: #f8f9fa;
+    --color-slate-100: #eef2f4;
+    --color-slate-200: #e4eaed;
+    --color-slate-300: #cad5da;
+    --color-slate-400: #93a4ac;
+    --color-slate-500: #6b7c84;
+    --color-slate-600: #5e7078;
+    --color-slate-700: #464646;
+    --color-slate-800: #243037;
+    --color-slate-900: #172026;
+    --color-slate-950: #0d1418;
+
+    /* Large, consistent radii, scaled by the "corners" setting. */
+    --radius-md: calc(8px * var(--radius-scale));
+    --radius-lg: calc(11px * var(--radius-scale));
+    --radius-xl: calc(13px * var(--radius-scale));
+    --radius-2xl: calc(22px * var(--radius-scale));
+    --radius-3xl: calc(26px * var(--radius-scale));
+
+    --ease-arrive: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @layer base {
     html {
         -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        color: var(--color-slate-700);
+        background-color: #f4f7f9;
+        /* One sheet of light behind the whole app: brand top-left, accent top-right. */
+        background-image:
+            radial-gradient(1100px 620px at 12% -8%, color-mix(in srgb, var(--brand) calc(11% * var(--wash-opacity)), transparent), transparent 60%),
+            radial-gradient(900px 560px at 104% 6%, color-mix(in srgb, var(--accent) calc(14% * var(--wash-opacity)), transparent), transparent 62%),
+            radial-gradient(800px 620px at 70% 108%, color-mix(in srgb, var(--brand) calc(8% * var(--wash-opacity)), transparent), transparent 60%);
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }
+
+    .dark body {
+        color: var(--color-slate-300);
+        background-color: #0b1216;
+        background-image:
+            radial-gradient(1100px 620px at 12% -8%, color-mix(in srgb, var(--brand) calc(18% * var(--wash-opacity)), transparent), transparent 60%),
+            radial-gradient(900px 560px at 104% 6%, color-mix(in srgb, var(--accent) calc(7% * var(--wash-opacity)), transparent), transparent 62%);
     }
 
     /* Keep absolutely-positioned screen-reader text inside scroll areas,
@@ -47,40 +135,63 @@
         display: none !important;
     }
 
-    /* Visible focus rings everywhere (WCAG 2.4.7). */
+    /* Visible focus everywhere (WCAG 2.4.7). */
     :focus-visible {
         outline: 2px solid var(--color-brand-600);
         outline-offset: 2px;
     }
 
     .dark :focus-visible {
-        outline-color: var(--color-brand-400);
+        outline-color: var(--color-brand-300);
     }
 }
 
 @layer components {
+    /* Panels float on the wash: hairline border separates, faint tinted shadow lifts. */
     .card {
-        @apply rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900;
+        @apply rounded-2xl bg-white dark:bg-slate-900;
+        border: 1px solid var(--hairline);
+        box-shadow: var(--shadow-panel);
+    }
+
+    .rail {
+        box-shadow: var(--shadow-rail);
     }
 
     .form-input {
-        @apply block w-full rounded-lg border-slate-300 bg-white text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-brand-600 focus:ring-brand-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500;
+        @apply block w-full rounded-xl border-[1.5px] border-slate-200 bg-white px-3.5 py-2.5 text-sm font-semibold text-slate-700 shadow-none transition-colors duration-150 placeholder:font-normal placeholder:text-slate-400 focus:border-brand-600 focus:ring-0 disabled:bg-slate-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-brand-400;
     }
 
     .form-label {
-        @apply mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300;
+        @apply mb-1.5 flex items-center gap-1.5 text-[11.5px] font-bold tracking-wide text-slate-600 uppercase dark:text-slate-400;
+    }
+
+    .eyebrow {
+        @apply text-[10px] font-bold tracking-[0.16em] text-slate-500 uppercase;
     }
 
     .table-base {
-        @apply min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800;
+        @apply min-w-full text-[13px];
+    }
+
+    .table-base thead {
+        @apply bg-slate-50 dark:bg-slate-950/40;
     }
 
     .table-base th {
-        @apply px-4 py-3 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase dark:text-slate-400;
+        @apply px-4 py-3 text-left text-[10px] font-bold tracking-wide whitespace-nowrap text-slate-400 uppercase;
     }
 
     .table-base td {
-        @apply px-4 py-3 text-slate-700 dark:text-slate-300;
+        @apply border-b border-slate-100 px-4 py-3 align-middle text-slate-700 dark:border-slate-800 dark:text-slate-300;
+    }
+
+    .table-base tbody tr:last-child td {
+        @apply border-b-0;
+    }
+
+    .table-base tbody tr:hover {
+        background: var(--hover-wash);
     }
 
     .table-base td.tabular-nums,
@@ -89,7 +200,11 @@
     }
 
     .link {
-        @apply font-medium text-brand-700 underline-offset-2 hover:underline dark:text-brand-400;
+        @apply font-bold text-brand-700 underline-offset-2 transition-colors hover:text-brand-900 hover:underline dark:text-brand-300 dark:hover:text-brand-200;
+    }
+
+    .hover-wash:hover {
+        background: var(--hover-wash);
     }
 }
 
@@ -106,4 +221,18 @@
     .no-print {
         display: none !important;
     }
+
+    body {
+        background: white !important;
+    }
+}
+
+/* Unlayered on purpose: the forms plugin's own :focus colours would otherwise win. */
+.form-input:focus {
+    border-color: var(--color-brand-600);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 14%, transparent);
+}
+
+.dark .form-input:focus {
+    border-color: var(--color-brand-400);
 }

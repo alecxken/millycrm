@@ -24,6 +24,31 @@ document.addEventListener('livewire:navigating', (e) => {
 });
 document.addEventListener('livewire:navigated', () => applyTheme(localStorage.getItem('theme') || 'system'));
 
+/* Turn 'var(--token)' strings from ChartPalette into rgb() Chart.js can draw. */
+const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+function resolveColor(value) {
+    if (typeof value !== 'string' || !value.startsWith('var(')) return value;
+    const el = document.createElement('span');
+    el.style.color = value;
+    document.body.appendChild(el);
+    const computed = getComputedStyle(el).color;
+    el.remove();
+    probe.clearRect(0, 0, 1, 1);
+    probe.fillStyle = '#000';
+    probe.fillStyle = computed;
+    probe.fillRect(0, 0, 1, 1);
+    const [r, g, b, a] = probe.getImageData(0, 0, 1, 1).data;
+    return `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(2)})`;
+}
+function resolveThemeColors(node) {
+    if (Array.isArray(node)) return node.map(resolveThemeColors);
+    if (node && typeof node === 'object') {
+        for (const key of Object.keys(node)) node[key] = resolveThemeColors(node[key]);
+        return node;
+    }
+    return resolveColor(node);
+}
+
 document.addEventListener('alpine:init', () => {
     const Alpine = window.Alpine;
 
@@ -80,10 +105,11 @@ document.addEventListener('alpine:init', () => {
             this._dark = dark;
             const grid = dark ? 'rgba(148,163,184,0.15)' : 'rgba(100,116,139,0.15)';
             const text = dark ? '#cbd5e1' : '#475569';
-            Chart.defaults.font.family = 'Inter, ui-sans-serif, system-ui';
+            Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+            Chart.defaults.font.weight = 600;
             Chart.defaults.color = text;
 
-            const cfg = JSON.parse(JSON.stringify(config));
+            const cfg = resolveThemeColors(JSON.parse(JSON.stringify(config)));
             cfg.options = cfg.options || {};
             cfg.options.maintainAspectRatio = false;
             cfg.options.responsive = true;

@@ -5,11 +5,12 @@ namespace App\Support;
 /** Brand-consistent colours for Chart.js datasets (validated for AA on light & dark). */
 final class ChartPalette
 {
-    public const TEAL = '#0F766E';
+    /* Theme tokens: resolved to real colours in the browser (resources/js/app.js), so charts follow Settings → Appearance. */
+    public const TEAL = 'var(--color-brand-700)';
 
-    public const SAND = '#F59E0B';
+    public const SAND = 'var(--accent)';
 
-    public const SERIES = ['#0F766E', '#F59E0B', '#0EA5E9', '#8B5CF6', '#E11D48', '#10B981', '#64748B', '#6366F1'];
+    public const SERIES = ['var(--color-brand-700)', 'var(--accent)', '#0EA5E9', '#8B5CF6', '#E11D48', '#10B981', '#64748B', 'var(--color-brand-400)'];
 
     public static function series(int $count): array
     {
@@ -64,7 +65,7 @@ final class ChartPalette
                     'label' => $label,
                     'data' => array_values($data),
                     'borderColor' => self::TEAL,
-                    'backgroundColor' => 'rgba(15,118,110,0.12)',
+                    'backgroundColor' => 'var(--color-brand-100)',
                     'fill' => true,
                     'tension' => 0.3,
                     'cubicInterpolationMode' => 'monotone',

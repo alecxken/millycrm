@@ -59,6 +59,7 @@ Route::middleware('auth')->group(function () {
 
     // Governance
     Route::prefix('admin')->group(function () {
+        Volt::route('appearance', 'pages.admin.appearance')->name('admin.appearance')->middleware('can:settings.manage');
         Volt::route('users', 'pages.admin.users')->name('admin.users')->middleware('can:admin.users');
         Volt::route('audit', 'pages.admin.audit')->name('admin.audit')->middleware('can:admin.audit');
         Volt::route('backups', 'pages.admin.backups')->name('admin.backups')->middleware('can:admin.backup');

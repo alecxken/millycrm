@@ -57,7 +57,7 @@ new #[Title('About the system')] class extends Component
     {{-- 2. Framework diagram --}}
     <x-card title="CRM process framework" subtitle="Acquire → Develop → Serve → Retain → Analyse, looping back to Acquire. Every stage reads and writes the single customer view.">
         <div class="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-            <svg viewBox="0 0 1120 470" class="min-w-[860px] w-full" role="img" aria-labelledby="fw-title fw-desc" font-family="Inter, ui-sans-serif, system-ui">
+            <svg viewBox="0 0 1120 470" class="min-w-[860px] w-full" role="img" aria-labelledby="fw-title fw-desc" style="font-family: var(--app-font)">
                 <title id="fw-title">WanderLink CRM process framework</title>
                 <desc id="fw-desc">Five stages in a loop: Acquire (channels to lead capture), Develop (pipeline, quote, booking), Serve (trip support and tickets), Retain (feedback, segmentation, campaigns, re-booking) and Analyse (dashboards and reports), which feeds back into Acquire.</desc>
                 <defs>
@@ -65,7 +65,7 @@ new #[Title('About the system')] class extends Component
                     <marker id="arrow-sand" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#F59E0B" /></marker>
                 </defs>
                 @php($stages = [
-                    ['1', 'Acquire', '#0F766E', ['Channels: walk-in, website,', 'WhatsApp, phone, referral', 'Lead capture (enquiry)', 'Assign consultant'], 'Customers · Pipeline'],
+                    ['1', 'Acquire', 'var(--brand)', ['Channels: walk-in, website,', 'WhatsApp, phone, referral', 'Lead capture (enquiry)', 'Assign consultant'], 'Customers · Pipeline'],
                     ['2', 'Develop', '#0284C7', ['Pipeline stages & nudges', 'Quote builder + markup', 'Convert quote → booking', 'Payments (M-Pesa, card)'], 'Pipeline · Quotes · Bookings'],
                     ['3', 'Serve', '#7C3AED', ['Pre-trip documents', 'Departures & passport alerts', 'Trip support', 'Service tickets & SLA'], 'My Day · Tickets'],
                     ['4', 'Retain', '#D97706', ['Post-trip feedback & NPS', 'Lifecycle & segmentation', 'Consent-based campaigns', 'Re-booking reminders'], 'Segments · Campaigns'],
@@ -75,8 +75,8 @@ new #[Title('About the system')] class extends Component
                     @php($x = 20 + $i * 220)
                     <g>
                         <rect x="{{ $x }}" y="40" width="180" height="250" rx="16" class="fill-white stroke-slate-200 dark:fill-slate-900 dark:stroke-slate-700" stroke-width="1.5" />
-                        <rect x="{{ $x }}" y="40" width="180" height="58" rx="16" fill="{{ $color }}" />
-                        <rect x="{{ $x }}" y="80" width="180" height="18" fill="{{ $color }}" />
+                        <rect x="{{ $x }}" y="40" width="180" height="58" rx="16" style="fill: {{ $color }}" />
+                        <rect x="{{ $x }}" y="80" width="180" height="18" style="fill: {{ $color }}" />
                         <circle cx="{{ $x + 28 }}" cy="69" r="14" fill="#fff" fill-opacity="0.25" />
                         <text x="{{ $x + 28 }}" y="74" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">{{ $n }}</text>
                         <text x="{{ $x + 52 }}" y="75" font-size="18" font-weight="700" fill="#fff">{{ $name }}</text>
@@ -84,7 +84,7 @@ new #[Title('About the system')] class extends Component
                             <text x="{{ $x + 16 }}" y="{{ 128 + $j * 26 }}" font-size="12.5" class="fill-slate-700 dark:fill-slate-300">{{ str_starts_with($line, 'WhatsApp') ? '' : '•' }} {{ $line }}</text>
                         @endforeach
                         <line x1="{{ $x + 16 }}" y1="244" x2="{{ $x + 164 }}" y2="244" class="stroke-slate-100 dark:stroke-slate-800" />
-                        <text x="{{ $x + 16 }}" y="268" font-size="11" font-weight="600" fill="{{ $color }}">{{ $modules }}</text>
+                        <text x="{{ $x + 16 }}" y="268" font-size="11" font-weight="600" style="fill: {{ $color }}">{{ $modules }}</text>
                     </g>
                     @if ($i < 4)
                         <line x1="{{ $x + 184 }}" y1="165" x2="{{ $x + 216 }}" y2="165" class="stroke-slate-400 dark:stroke-slate-500" stroke-width="2" marker-end="url(#arrow)" />

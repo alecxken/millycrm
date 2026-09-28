@@ -133,13 +133,13 @@ new #[Title('Dashboard')] class extends Component
 
 <div wire:poll.30s.visible>
     <x-page-header :title="(now()->hour < 12 ? 'Good morning' : (now()->hour < 17 ? 'Good afternoon' : 'Good evening')).', '.auth()->user()->firstName()"
-                   :subtitle="now()->format('l, j F Y').' · live, refreshes every 30 seconds'">
+                   :subtitle="now()->format('l j F').' · here is how things stand right now'">
         <x-slot:actions>
             @if (auth()->user()->isManagerOrAbove())
-                <div class="inline-flex max-w-full overflow-x-auto rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist" aria-label="Dashboard view">
+                <div class="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-[var(--hairline)] bg-white p-1 text-[12.5px] shadow-[var(--shadow-panel)] dark:bg-slate-900" role="tablist" aria-label="Dashboard view">
                     @foreach (['executive' => 'Executive', 'consultant' => 'Consultant', 'marketing' => 'Marketing', 'support' => 'Support'] as $key => $label)
                         <button type="button" role="tab" wire:click="$set('view', '{{ $key }}')" aria-selected="{{ $view === $key ? 'true' : 'false' }}"
-                                @class(['shrink-0 rounded-lg px-3 py-1.5 font-medium transition', 'bg-white text-slate-900 shadow-sm dark:bg-slate-950 dark:text-white' => $view === $key, 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white' => $view !== $key])>{{ $label }}</button>
+                                @class(['shrink-0 rounded-full px-4 py-1.5 font-bold transition', 'bg-brand-800 text-white shadow-[0_4px_12px_color-mix(in_srgb,var(--brand)_25%,transparent)]' => $view === $key, 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white' => $view !== $key])>{{ $label }}</button>
                     @endforeach
                 </div>
             @endif

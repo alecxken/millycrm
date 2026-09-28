@@ -91,7 +91,7 @@ new #[Title('Suppliers')] class extends Component
 }; ?>
 
 <div>
-    <x-page-header title="Suppliers" subtitle="Airlines, hotels, tour operators and partners — with commission, rating and volume.">
+    <x-page-header title="Suppliers" subtitle="The airlines, lodges and operators we book with, and how much we send their way.">
         <x-slot:actions>@can('suppliers.manage')<x-button icon="plus" wire:click="create">Add supplier</x-button>@endcan</x-slot:actions>
     </x-page-header>
 

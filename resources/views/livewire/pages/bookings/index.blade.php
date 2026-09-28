@@ -53,7 +53,7 @@ new #[Title('Bookings')] class extends Component
 }; ?>
 
 <div>
-    <x-page-header title="Bookings" subtitle="Confirmed trips, payments and who's travelling next." />
+    <x-page-header title="Bookings" subtitle="Who is travelling next, and what is still to be paid." />
 
     <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <x-stat label="Upcoming trips" :value="$upcomingCount" icon="ticket" />
@@ -62,9 +62,9 @@ new #[Title('Bookings')] class extends Component
     </div>
 
     <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div class="inline-flex max-w-full overflow-x-auto rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist">
+        <div class="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-[var(--hairline)] bg-white p-1 text-[12.5px] shadow-[var(--shadow-panel)] dark:bg-slate-900" role="tablist">
             @foreach (['upcoming' => 'Upcoming', 'past' => 'Completed', 'cancelled' => 'Cancelled', 'all' => 'All'] as $key => $label)
-                <button type="button" role="tab" wire:click="$set('when', '{{ $key }}')" aria-selected="{{ $when === $key ? 'true' : 'false' }}" @class(['shrink-0 rounded-lg px-3 py-1.5 font-medium', 'bg-white shadow-sm dark:bg-slate-950' => $when === $key, 'text-slate-600 dark:text-slate-400' => $when !== $key])>{{ $label }}</button>
+                <button type="button" role="tab" wire:click="$set('when', '{{ $key }}')" aria-selected="{{ $when === $key ? 'true' : 'false' }}" @class(['shrink-0 rounded-full px-4 py-1.5 font-bold', 'bg-brand-800 text-white shadow-[0_4px_12px_color-mix(in_srgb,var(--brand)_25%,transparent)]' => $when === $key, 'text-slate-500 hover:text-brand-800 dark:text-slate-400 dark:hover:text-white' => $when !== $key])>{{ $label }}</button>
             @endforeach
         </div>
         <div class="flex gap-3">

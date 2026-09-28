@@ -45,7 +45,7 @@ new #[Title('Feedback')] class extends Component
 }; ?>
 
 <div>
-    <x-page-header title="Customer feedback" subtitle="Net Promoter Score and comments collected after every trip." />
+    <x-page-header title="Customer feedback" subtitle="What travellers told us after they got home." />
 
     <div class="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         <x-stat label="Net Promoter Score" :value="$nps !== null ? ($nps > 0 ? '+' : '').$nps : '—'" icon="heart" tone="amber" hint="Last 12 months" />
@@ -61,7 +61,7 @@ new #[Title('Feedback')] class extends Component
 
     <div class="mb-4 inline-flex rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist">
         @foreach (['' => 'All', 'promoter' => 'Promoters', 'passive' => 'Passives', 'detractor' => 'Detractors'] as $key => $label)
-            <button type="button" role="tab" wire:click="$set('group', '{{ $key }}')" aria-selected="{{ $group === $key ? 'true' : 'false' }}" @class(['shrink-0 rounded-lg px-3 py-1.5 font-medium', 'bg-white shadow-sm dark:bg-slate-950' => $group === $key, 'text-slate-600 dark:text-slate-400' => $group !== $key])>{{ $label }}</button>
+            <button type="button" role="tab" wire:click="$set('group', '{{ $key }}')" aria-selected="{{ $group === $key ? 'true' : 'false' }}" @class(['shrink-0 rounded-full px-4 py-1.5 font-bold', 'bg-brand-800 text-white shadow-[0_4px_12px_color-mix(in_srgb,var(--brand)_25%,transparent)]' => $group === $key, 'text-slate-500 hover:text-brand-800 dark:text-slate-400 dark:hover:text-white' => $group !== $key])>{{ $label }}</button>
         @endforeach
     </div>
 

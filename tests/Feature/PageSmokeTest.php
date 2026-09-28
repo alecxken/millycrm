@@ -97,6 +97,7 @@ it('renders governance screens for the owner', function () {
     $this->get(route('admin.users'))->assertOk()->assertSee('Permission matrix');
     $this->get(route('admin.audit'))->assertOk()->assertSee('Audit trail');
     $this->get(route('admin.backups'))->assertOk();
+    $this->get(route('admin.appearance'))->assertOk()->assertSee('Start from a palette');
     $this->get(route('profile'))->assertOk();
 });
 

@@ -130,7 +130,7 @@ new #[Title('Segments')] class extends Component
 }; ?>
 
 <div>
-    <x-page-header title="Segment builder" subtitle="Combine rules to find the right customers. The count updates as you build.">
+    <x-page-header title="Segment builder" subtitle="Describe who you want to reach. The count updates as you go.">
         <x-slot:actions>
             <x-button variant="secondary" icon="plus" wire:click="blank">New segment</x-button>
         </x-slot:actions>

@@ -50,8 +50,12 @@ Every demo account uses the password `password`: owner@, manager@, consultant@ (
 
 - Personas: Achieng (a consultant with 30 WhatsApp enquiries), David (the owner, who wants the numbers in 10 seconds) and Grace (support, handling an angry customer with a lost passport).
 - Visual style:
-  - Inter font on an 8px spacing grid
-  - Palette: brand teal `#0F766E` (`brand-*`), sand accent `#F59E0B` (`sand-*`) and slate neutrals
+  - Quicksand (self-hosted via @fontsource) on an 8px grid. Light weight only at 13px and above.
+  - The page floats on a soft brand-tinted light wash. Panels (`.card`) are white with a hairline border and a faint brand-tinted shadow. The sidebar is a floating rail; the top bar is transparent.
+  - **Theme is runtime-configurable** (`ThemeService`, Settings → Appearance). Never hard-code brand hex values: use `brand-*` / `sand-*` classes or `var(--brand)` / `var(--accent)`. Shades are derived with `color-mix()` in `resources/css/app.css`, and charts get theme colours through `ChartPalette` tokens (`var(--…)`), which the browser resolves.
+  - Radii scale with `--radius-scale`: `rounded-xl` (13px) for controls, `rounded-2xl` (22px) for panels, and pills for chips and segmented controls.
+  - Slate is overridden with cool, blue-leaning greys. Use `slate-500` or darker for readable text (AA); reserve `slate-400` for decoration.
   - Dark mode via the `.dark` class, following the system theme by default
   - WCAG AA contrast and visible focus rings
+- Copy should sound like colleagues wrote it: warm, specific and plain. Avoid generic "AI" phrasing.
 - Check each screen at 375px width and in dark mode.

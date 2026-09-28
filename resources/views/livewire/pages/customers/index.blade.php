@@ -210,7 +210,7 @@ new #[Title('Customers')] class extends Component
 }; ?>
 
 <div>
-    <x-page-header title="Customers" subtitle="Every traveller, company and group we serve — the single customer view.">
+    <x-page-header title="Customers" subtitle="Everyone who has ever asked us about a trip, all in one place.">
         <x-slot:actions>
             <x-dropdown align="right" width="64">
                 <x-slot name="trigger">

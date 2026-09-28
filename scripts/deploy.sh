@@ -41,7 +41,9 @@ touch database/database.sqlite
 
 echo "==> Migrating database"
 php artisan migrate --force
+php artisan db:seed --class=RolesAndPermissionsSeeder --force   # idempotent: picks up new permissions
 php artisan crm:seed-demo --if-empty
+php artisan db:seed --class=AdminAccountsSeeder --force   # idempotent: named admin accounts
 
 echo "==> Caching config, routes, views and events"
 php artisan optimize:clear

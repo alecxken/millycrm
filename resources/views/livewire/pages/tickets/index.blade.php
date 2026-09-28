@@ -67,14 +67,14 @@ new #[Title('Tickets')] class extends Component
 }; ?>
 
 <div>
-    <x-page-header title="Service tickets" subtitle="Sorted by SLA deadline — the most urgent customer is always at the top.">
+    <x-page-header title="Service tickets" subtitle="Oldest promise first: whoever is closest to their SLA sits at the top.">
         <x-slot:actions><x-button variant="secondary" icon="users" :href="route('customers.index')" wire:navigate>Open a ticket from a customer</x-button></x-slot:actions>
     </x-page-header>
 
     <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div class="inline-flex max-w-full overflow-x-auto rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist">
+        <div class="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-[var(--hairline)] bg-white p-1 text-[12.5px] shadow-[var(--shadow-panel)] dark:bg-slate-900" role="tablist">
             @foreach (['open' => 'All open', 'mine' => 'Assigned to me', 'breached' => 'SLA breached', 'resolved' => 'Resolved'] as $key => $label)
-                <button type="button" role="tab" wire:click="$set('filter', '{{ $key }}')" aria-selected="{{ $filter === $key ? 'true' : 'false' }}" @class(['inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium', 'bg-white shadow-sm dark:bg-slate-950' => $filter === $key, 'text-slate-600 dark:text-slate-400' => $filter !== $key])>
+                <button type="button" role="tab" wire:click="$set('filter', '{{ $key }}')" aria-selected="{{ $filter === $key ? 'true' : 'false' }}" @class(['inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-1.5 font-bold', 'bg-brand-800 text-white shadow-[0_4px_12px_color-mix(in_srgb,var(--brand)_25%,transparent)]' => $filter === $key, 'text-slate-500 hover:text-brand-800 dark:text-slate-400 dark:hover:text-white' => $filter !== $key])>
                     {{ $label }} <span @class(['rounded-full px-1.5 text-xs', 'bg-rose-100 text-rose-700 dark:bg-rose-400/20 dark:text-rose-300' => $key === 'breached' && $counts[$key], 'bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300' => ! ($key === 'breached' && $counts[$key])])>{{ $counts[$key] }}</span>
                 </button>
             @endforeach

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quote {{ $quote->reference }} · WanderLink Travel</title>
     @vite(['resources/css/app.css'])
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
+    <style>{!! app(\App\Services\ThemeService::class)->cssVariables() !!}</style>
     <style>@page { size: A4; margin: 14mm; } body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }</style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-900 antialiased print:bg-white">

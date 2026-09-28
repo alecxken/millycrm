@@ -2,7 +2,7 @@
 
 A working prototype of a **Customer Relationship Management System (CRMS)** for *WanderLink Travel*, a fictional independent travel agency in Nairobi. Built for **BIS541 Information Systems Management (CDU), Assignment 2**, so that every part of the written report can be demonstrated and screenshotted from a running system.
 
-**Stack:** Laravel 12 · PHP 8.3+ · Livewire 3 + Volt · Tailwind CSS 4 · Alpine.js · Chart.js · spatie/laravel-permission · spatie/laravel-activitylog · SQLite (MySQL-compatible) · Pest
+**Stack:** Laravel 12 · PHP 8.3+ · Livewire 3 + Volt · Tailwind CSS 4 · Alpine.js · Chart.js · Quicksand (self-hosted) · spatie/laravel-permission · spatie/laravel-activitylog · SQLite (MySQL-compatible) · Pest
 
 ---
 
@@ -36,16 +36,37 @@ Every account uses the password `password`. The login page also has one-click de
 | Marketing | Zawadi Mutua | `marketing@wanderlink.test` |
 | Support | Grace Wekesa | `support@wanderlink.test` |
 
+Two named administrator accounts with full rights (Owner) are also seeded: `mildredkendagor@gmail.com` and `alecxkendagor@gmail.com`. Their password comes from `DEMO_ADMIN_PASSWORD` in `.env`, which defaults to `password`, so **set it on any public server**. They are created by `AdminAccountsSeeder`, which runs on every deploy but never overwrites an existing password.
+
 Owners and managers can preview every role's dashboard with the **Executive / Consultant / Marketing / Support** switcher.
 
 ### Useful commands
 
 | Command | What it does |
 |---|---|
-| `php artisan test` | Runs the Pest suite (86 tests) |
+| `php artisan test` | Runs the Pest suite (97 tests) |
 | `php artisan crm:run-scheduled-reports [--all]` | Generates due MIS reports and "emails" them. Mail uses the `log` driver, so check `storage/logs/laravel.log` |
 | `php artisan crm:daily` | Updates booking statuses, creates feedback-request and re-booking tasks, runs lifecycle rules (including inactive after 18 months) |
 | `php artisan crm:backup` | Dumps the database to `storage/app/backups/wanderlink-YYYYmmdd-His.sqlite` |
+
+### Customising the look
+
+**Settings → Appearance** (owner and manager) re-themes the whole app live, with no rebuild:
+
+- **Palette:** six presets (WanderLink teal and sand, Ocean, Sunset, Jacaranda, Forest, Midnight) or any brand and accent colour. Every shade is derived at runtime with CSS `color-mix()`, and text on buttons automatically switches between light and dark to stay readable.
+- **Typeface:** Quicksand by default, or Nunito, Plus Jakarta Sans, Inter or the system font. All fonts are self-hosted, so nothing loads from a CDN.
+- **Corners:** soft, balanced or crisp.
+- **Background:** the soft brand-coloured light wash can be switched on or off.
+
+Each user's light/dark/system preference stays their own.
+
+**Login media** is set in `.env`:
+
+- `LOGIN_VIDEO_URL`: defaults to a Pexels travel clip. It plays muted and looped, and is skipped for users who prefer reduced motion.
+- `LOGIN_IMAGE_URL`: an Unsplash photo, also used as the video's poster frame.
+- `LOGIN_MEDIA_CREDIT`: the credit line shown under the media.
+
+The brand gradient is painted underneath and the media is alpha-masked on top, so a blocked URL leaves a clean gradient rather than a broken image.
 
 ---
 
@@ -114,7 +135,7 @@ Mapped to **Murray's criteria**:
 | **Security** | Role-based access control (spatie/laravel-permission) with a single permission matrix (`app/Support/Permissions.php`). The sidebar hides modules a role cannot use. Row-level visibility means consultants see only their own customers, enquiries and bookings (`VisibleToUser` scope + policies). Passport numbers are **encrypted at rest** (`encrypted` cast). CSRF protection covers every form and Livewire request, and login is **rate limited** (5 attempts). Deactivated staff cannot sign in, and the public feedback form uses **signed, expiring URLs** |
 | **Accountability** | spatie/laravel-activitylog records who changed what and when on customers, enquiries, quotes, bookings, tickets, campaigns, suppliers and users. The **Audit trail** screen filters by user or record type. Consent changes are timestamped, and every passport reveal and data export is logged |
 | **Backup** | `php artisan crm:backup` runs nightly at 02:00 via the scheduler. An owner-only **Backups** screen lists and downloads the backups |
-| **Ease of use** | Design-thinking personas (Achieng, David, Grace); Ctrl/⌘+K command palette; slide-over panels; toasts with undo; teaching empty states; progressive disclosure ("More details"); dark mode; WCAG AA contrast; status always shown as colour plus icon plus text; keyboard focus rings; mobile layouts |
+| **Ease of use** | Design-thinking personas (Achieng, David, Grace); a customisable theme (Settings → Appearance); Ctrl/⌘+K command palette; slide-over panels; toasts with undo; teaching empty states; progressive disclosure ("More details"); dark mode; WCAG AA contrast; status always shown as colour plus icon plus text; keyboard focus rings; mobile layouts |
 | **Privacy** | Marketing consent is captured with a date and enforced in code. **Subject access:** a JSON export of everything held about a customer. **Erasure:** soft-delete then anonymise, keeping financial records for tax and audit |
 
 ### Privacy law note

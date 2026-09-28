@@ -246,12 +246,12 @@ new #[Title('Pipeline')] class extends Component
 }; ?>
 
 <div>
-    <x-page-header title="Sales pipeline" subtitle="Drag enquiries between stages. Cards turn amber when a customer has gone quiet.">
+    <x-page-header title="Sales pipeline" subtitle="Drag a card along when the conversation moves on. Amber means someone has gone quiet, so give them a nudge.">
         <x-slot:actions>
-            <div class="inline-flex max-w-full overflow-x-auto rounded-xl bg-slate-100 p-1 text-sm dark:bg-slate-800" role="tablist" aria-label="Layout">
+            <div class="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-[var(--hairline)] bg-white p-1 text-[12.5px] shadow-[var(--shadow-panel)] dark:bg-slate-900" role="tablist" aria-label="Layout">
                 @foreach (['board' => ['Board', 'view-columns'], 'list' => ['List', 'list-bullet']] as $key => [$label, $icon])
                     <button type="button" role="tab" wire:click="$set('view', '{{ $key }}')" aria-selected="{{ $view === $key ? 'true' : 'false' }}"
-                            @class(['inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium', 'bg-white shadow-sm dark:bg-slate-950' => $view === $key, 'text-slate-600 dark:text-slate-400' => $view !== $key])>
+                            @class(['inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 font-bold', 'bg-brand-800 text-white shadow-[0_4px_12px_color-mix(in_srgb,var(--brand)_25%,transparent)]' => $view === $key, 'text-slate-500 hover:text-brand-800 dark:text-slate-400 dark:hover:text-white' => $view !== $key])>
                         <x-hicon :name="$icon" class="size-4" />{{ $label }}
                     </button>
                 @endforeach

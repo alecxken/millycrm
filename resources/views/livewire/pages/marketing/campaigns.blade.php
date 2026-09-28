@@ -47,7 +47,7 @@ new #[Title('Campaigns')] class extends Component
 }; ?>
 
 <div>
-    <x-page-header title="Campaigns" subtitle="Personalised email, SMS and WhatsApp campaigns — only ever sent to customers who opted in.">
+    <x-page-header title="Campaigns" subtitle="Personal notes to the right people, and only to those who said yes to hearing from us.">
         <x-slot:actions>@can('marketing.manage')<x-button icon="plus" wire:click="$set('panel', 'new-campaign')">New campaign</x-button>@endcan</x-slot:actions>
     </x-page-header>
 

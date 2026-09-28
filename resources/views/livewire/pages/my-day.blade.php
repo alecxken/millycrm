@@ -82,7 +82,7 @@ new #[Title('My Day')] class extends Component
 }; ?>
 
 <div>
-    <x-page-header title="My Day" :subtitle="now()->format('l, j F').' — here is what needs you today.'">
+    <x-page-header title="My Day" :subtitle="(now()->hour < 12 ? 'Morning' : (now()->hour < 17 ? 'Afternoon' : 'Evening')).', '.auth()->user()->firstName().'. Here is what needs you today.'">
         <x-slot:actions>
             @if (auth()->user()->isManagerOrAbove())
                 <label class="inline-flex items-center gap-2 text-sm font-medium"><input type="checkbox" wire:model.live="team" class="rounded border-slate-300 text-brand-700 focus:ring-brand-600"> Whole team</label>
