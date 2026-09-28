@@ -163,3 +163,75 @@ This is a teaching prototype, not legal advice. A production deployment would ad
 - **No AI yet.** *Next:* **AI next-best-offer** that suggests destinations from preferences and history; lead scoring; sentiment analysis of feedback comments.
 - Currency conversion uses fixed indicative rates. There is a single-branch, single-tenant setup and no customer self-service portal. Pages are English only.
 - Automated browser tests are limited to smoke and flow checks; accessibility has been checked manually rather than through a full audit.
+
+---
+
+## 7. Deployment (auto-deploy to crm.tenzatech.co.ke)
+
+Every push to `main` runs `.github/workflows/deploy.yml`:
+
+1. **Test:** installs dependencies, builds the assets, and runs the full Pest suite on PHP 8.3, the server's PHP version.
+2. **Deploy** (only if the tests pass):
+   - builds the front-end assets in CI, so the server never needs Node
+   - uploads `public/build` with rsync
+   - SSHes in and runs [`scripts/deploy.sh`](scripts/deploy.sh)
+   - smoke-checks `https://crm.tenzatech.co.ke/login`
+
+Pull requests only run the tests. You can also start a deploy by hand from **Actions → Test & deploy → Run workflow**.
+
+`scripts/deploy.sh` does the following on the server:
+
+- puts the site in maintenance mode
+- runs `git reset --hard origin/main`
+- runs `composer install --no-dev`
+- creates `.env` on the first install
+- runs `migrate --force`
+- loads the demo data **only if the database is empty** (`crm:seed-demo --if-empty`)
+- runs `optimize`
+- fixes permissions for `www-data`
+- reloads `php8.3-fpm`
+- brings the site back up
+
+Composer is pinned to PHP 8.3 (`config.platform.php`), so the lockfile always installs on the server.
+
+### One-time server setup
+
+```bash
+# 1. Get the fixed lockfile and do the first install by hand
+cd /var/www/millycrm
+git pull origin main
+bash scripts/deploy.sh          # installs, creates .env, migrates, seeds the demo data
+
+# 2. Production settings in .env, then re-cache
+nano .env
+#   APP_NAME="WanderLink CRM"
+#   APP_ENV=production
+#   APP_DEBUG=false
+#   APP_URL=https://crm.tenzatech.co.ke
+#   SESSION_SECURE_COOKIE=true
+php artisan optimize
+
+# 3. Scheduler: scheduled reports, daily automation, nightly backups
+( crontab -u www-data -l 2>/dev/null; echo "* * * * * cd /var/www/millycrm && php artisan schedule:run >> /dev/null 2>&1" ) | crontab -u www-data -
+
+# 4. A key GitHub Actions uses to SSH in (no passphrase)
+ssh-keygen -t ed25519 -f ~/.ssh/github_deploy -N "" -C "github-actions-deploy"
+cat ~/.ssh/github_deploy.pub >> ~/.ssh/authorized_keys
+cat ~/.ssh/github_deploy        # paste this private key into the DEPLOY_SSH_KEY secret
+```
+
+The server also needs `rsync` (`apt install rsync`), and nginx's `root` must point at `/var/www/millycrm/public`. The server's existing GitHub SSH key (used for `git clone`) is reused for `git fetch`.
+
+### GitHub repository secrets
+
+Add these under **Settings → Secrets and variables → Actions**:
+
+| Secret | Value |
+|---|---|
+| `DEPLOY_HOST` | The droplet's IP address or hostname |
+| `DEPLOY_USER` | `root` (or a deploy user that can run the script) |
+| `DEPLOY_SSH_KEY` | Contents of `~/.ssh/github_deploy` (the private key) |
+| `DEPLOY_PATH` | *(optional)* defaults to `/var/www/millycrm` |
+| `DEPLOY_PORT` | *(optional)* defaults to `22` |
+
+To reset the live demo data: `cd /var/www/millycrm && php artisan migrate:fresh --seed --force`.
